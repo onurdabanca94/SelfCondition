@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using SelfCondition.Entities;
 
@@ -15,6 +16,19 @@ namespace SelfCondition
                 opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
                 //opts.UseLazyLoadingProxies();
             });
+
+            builder.Services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(opts =>
+                {
+                    opts.Cookie.Name = ".SelfCondition.auth"; // Bu cookie ismi ile sakla bilgileri kullanýcýnýn tarayýsýnda login bilgilerini.
+                    opts.ExpireTimeSpan = TimeSpan.FromDays(7);
+                    //opts.SlidingExpiration = true; // Expire süresi ilerlesin.
+                    opts.SlidingExpiration = false;
+                    opts.LoginPath = "/Account/Login";
+                    opts.LogoutPath = "/Account/Login";
+                    opts.AccessDeniedPath = "/Home/AccessDenied";
+                });
 
             var app = builder.Build();
 
