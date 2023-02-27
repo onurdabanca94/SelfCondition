@@ -25,9 +25,9 @@ namespace SelfCondition
                     opts.ExpireTimeSpan = TimeSpan.FromDays(7);
                     //opts.SlidingExpiration = true; // Expire süresi ilerlesin.
                     opts.SlidingExpiration = false;
-                    opts.LoginPath = "/Account/Login";
+                    opts.LoginPath = "/Account/Login"; // Login deðilse buraya atar.
                     opts.LogoutPath = "/Account/Login";
-                    opts.AccessDeniedPath = "/Home/AccessDenied";
+                    opts.AccessDeniedPath = "/Home/AccessDenied"; // Rol kontrolü
                 });
 
             var app = builder.Build();
@@ -37,10 +37,10 @@ namespace SelfCondition
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
             app.UseStaticFiles();
-
             app.UseRouting();
-
+            app.UseAuthentication(); // sýralama önemli! öncelik authentication servisi aktive et kimlik doðrula sonra authorization
             app.UseAuthorization();
 
             app.MapControllerRoute(
